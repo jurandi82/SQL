@@ -1,0 +1,49 @@
+Para configurar a VirtualBox para aceitar conexão externa
+
+https://stackoverflow.com/questions/18121666/connect-to-postgresql-database-in-linux-virtualbox-from-win7
+
+1- Ativar o Adapter 2 na VM como Host-only Adapter
+
+2- configurar o postgresql para aceitar a conexão
+
+$ sudo nano /etc/postgresql/<version>/main/postgresql.conf
+
+adicionar a linha
+
+listen_addresses = '*'
+
+$ sudo nano /etc/postgresql/<version>/main/pg_hba.conf
+
+adicionar a linha 
+
+host    all             all             192.168.56.1/0          trust
+
+reiniciar
+
+$ service postgresql restart
+
+3- configurar a senha do postgresql
+
+$ sudo -u postgres psql
+$ ALTER USER postgres PASSWORD 'newPassword';
+
+ou 
+
+$ sudo passwd postgres
+
+4- Configurar o MySql
+
+no arquivo de configuração adicione a sessão [mysql]
+
+bind-address=0.0.0.0
+
+Dar acesso as bases, dentro do mysql rode:
+
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'192.168.56.%'
+    IDENTIFIED BY ''  
+    WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+
+
+
